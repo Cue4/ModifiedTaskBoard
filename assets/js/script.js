@@ -67,8 +67,9 @@ function handleAddTask(event){
     $('#task').val('')
     $('#duedate').val('')
     $('#description').val('')
-    createtaskcard(taskList)
+    createnewtask(newtask)
 }
+
 
 // Function to handle deleting a task
 function handleDeleteTask(event){
