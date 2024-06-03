@@ -11,6 +11,7 @@ function generateTaskId() {
 function createTaskCard(task) {
     const taskCard = $('<div>')
         .addClass('card task-card draggable my-3')
+        // .addClass('card task-card droppable my-3')
         .attr('data-task-id', task.id);
     const cardHeader = $('<div>').addClass('card-header h4').text(task.title);
     const cardBody = $('<div>').addClass('card-body');
@@ -48,29 +49,10 @@ function renderTaskList() {
     // const projects = readProjectsFromStorage();
     const todoList = $('#todo-cards');
     todoList.empty();
-
-  const inProgressList = $('#in-progress-cards');
-  inProgressList.empty();
-
-  const doneList = $('#done-cards');
-  doneList.empty();
-
-//   $('.taskCard').draggable({
-//     opacity: 0.7,
-//     zIndex: 100,
-    
-//     helper: function (e) {
-      
-//       const original = $(e.target).hasClass('ui-draggable')
-//         ? $(e.target)
-//         : $(e.target).closest('.ui-draggable');
-      
-//       return original.clone().css({
-//         width: original.outerWidth(),
-//       });
-//     },
-//   });
-// }
+    const inProgressList = $('#in-progress-cards');
+    inProgressList.empty();
+    const doneList = $('#done-cards');
+    doneList.empty();
 
   for (let task of tasks) {
     if (task.status === 'to-do') {
@@ -81,6 +63,18 @@ function renderTaskList() {
       doneList.append(createTaskCard(task));
     }
   }
+  $('.draggable').draggable({
+    opacity: 0.7,
+    zIndex: 100,
+    helper: function (e) {
+      const original = $(e.target).hasClass('ui-draggable')
+        ? $(e.target)
+        : $(e.target).closest('.ui-draggable');
+      return original.clone().css({
+        width: original.outerWidth(),
+      });
+    },
+  });
 }
 
 // Function to handle adding a new task
@@ -124,20 +118,30 @@ function handleDeleteTask(event){
 
 // Function to handle dropping a task into a new status lane
 function handleDrop(event, ui) {
+    const projects = readTaskFromStorage();
+    const taskId = ui.draggable[0].dataset.projectId;
+    const newStatus = event.target.id;
+    for (let project of projects) {
+        if (project.id === taskId) {
+            project.status = newStatus;
+          }
+        }
+        localStorage.setItem('projects', JSON.stringify(projects));
+        renderTaskList();
+      }
+    // $('.lane').droppable({
+    //     accept: '.draggable',
+    //     drop: handleDrop,
+    //   });
+
+
+// Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
+$(document).ready(function () {
+    // $('#taskbtn').on('click', handleAddTask)
+    renderTaskList();
     $('.lane').droppable({
         accept: '.draggable',
         drop: handleDrop,
       });
-}
+    });
 
-// Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
-$(document).ready(function () {
-    $('#taskbtn').on('click', handleAddTask)
-    renderTaskList();
-    
-    $('.draggable').draggable({
-        opacity: 0.7,
-        zIndex: 100,
-        helper: function (e) {
-        }});
-});
