@@ -112,11 +112,6 @@ function handleDeleteTask(event){
     $(event.target).closest('.task-card').remove();
 }
 
-
-
-
-
-
 // Function to handle dropping a task into a new status lane
 function handleDrop(event, ui) {
     const taskList = readTaskFromStorage();
@@ -131,6 +126,7 @@ function handleDrop(event, ui) {
         //   handleDrop();
         // return dropElement();
     }}
+    
 // The page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
 $(document).ready(function() {
     $('#taskbtn').on('click', handleAddTask)
