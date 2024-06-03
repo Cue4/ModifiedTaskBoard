@@ -81,10 +81,10 @@ function handleAddTask(event){
     localStorage.setItem('tasks', JSON.stringify(taskList));
     $('#formModal').modal('hide')
 
-    const taskColumn = taskList.status === 'to-do' ? $('#todo-cards') :
-    taskList.status === 'in-progress' ? $('#in-progress-cards') :
-    taskList.status === 'done' ? $(`#done-cards`) :
-    taskColumn.append(createTaskCard());
+    // const taskColumn = taskList.status === 'to-do' ? $('#todo-cards') :
+    // taskList.status === 'in-progress' ? $('#in-progress-cards') :
+    // taskList.status === 'done' ? $(`#done-cards`) :
+    // taskColumn.append(createTaskCard());
     renderTaskList();
 
   
@@ -95,12 +95,12 @@ function handleAddTask(event){
 
 function readTaskFromStorage(){
 
-    const storedTasks = localStorage.getItem('tasks');
-    taskList = storedTasks ? JSON.parse(storedTasks) : [];
+    // const storedTasks = localStorage.getItem('tasks');
+    // taskList = storedTasks ? JSON.parse(storedTasks) : [];
 
-    // if (!taskList ){
-    //     taskList = []
-    // }
+    if (!taskList ){
+        taskList = []
+    }
     return taskList;
 }
 
@@ -120,8 +120,8 @@ function handleDeleteTask(event){
 // Function to handle dropping a task into a new status lane
 function handleDrop(event, ui) {
     const taskList = readTaskFromStorage();
-    const taskCard = ui.draggable.attr('data-task-id');
-    // const taskCard = $.draggable[todo-cards].dataset.taskCard;
+    // const taskCard = ui.draggable.attr('data-task-id');
+    const taskCard = $.draggable['.card'].dataset.taskCard;
     const newStatus = event.target.id;
     for (let task of taskList) {
         if (task.card === taskCard) {
