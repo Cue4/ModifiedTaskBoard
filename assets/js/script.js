@@ -63,18 +63,19 @@ function renderTaskList() {
       doneList.append(createTaskCard(task));
     }
   }
-  $('.draggable').draggable({
-    opacity: 0.7,
-    zIndex: 100,
-    helper: function (e) {
-      const original = $(e.target).hasClass('ui-draggable')
-        ? $(e.target)
-        : $(e.target).closest('.ui-draggable');
-      return original.clone().css({
-        width: original.outerWidth(),
-      });
-    },
-  });
+//   $(document).ready(function() {
+//   $('.draggable').draggable({
+//     opacity: 0.7,
+//     zIndex: 100,
+//     helper: function (e) {
+//       const original = $(e.target).hasClass('ui-draggable')
+//         ? $(e.target)
+//         : $(e.target).closest('.ui-draggable');
+//       return original.clone().css({
+//         width: original.outerWidth(),
+//       });
+//     },
+//   });
 }
 
 // Function to handle adding a new task
@@ -118,16 +119,16 @@ function handleDeleteTask(event){
 
 // Function to handle dropping a task into a new status lane
 function handleDrop(event, ui) {
-    const projects = readTaskFromStorage();
-    const taskId = ui.draggable[0].dataset.projectId;
+    const taskList = readTaskFromStorage();
+    const taskId = ui.draggable[0].dataset.taskId;
     const newStatus = event.target.id;
-    for (let project of projects) {
-        if (project.id === taskId) {
-            project.status = newStatus;
+    for (let task of task) {
+        if (task.id === taskId) {
+            task.status = newStatus;
           }
         }
-        localStorage.setItem('projects', JSON.stringify(projects));
-        renderTaskList();
+        localStorage.setItem('tasklist', JSON.stringify(task));
+        handleDrop();
       }
     // $('.lane').droppable({
     //     accept: '.draggable',
@@ -136,12 +137,27 @@ function handleDrop(event, ui) {
 
 
 // Todo: when the page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
-$(document).ready(function () {
-    // $('#taskbtn').on('click', handleAddTask)
+$(document).readyfunction; {
+    $('#taskbtn').on('click', handleAddTask)
+
     renderTaskList();
+
+    $('.draggable').draggable({
+        opacity: 0.7,
+        zIndex: 100,
+        helper: function (e) {
+          const original = $(e.target).hasClass('ui-draggable')
+            ? $(e.target)
+            : $(e.target).closest('.ui-draggable');
+          return original.clone().css({
+            width: original.outerWidth(),
+          });
+        },
+      });
+
     $('.lane').droppable({
         accept: '.draggable',
         drop: handleDrop,
       });
-    });
+    }
 
