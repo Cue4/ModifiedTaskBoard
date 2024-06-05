@@ -42,8 +42,6 @@ return taskCard;
 
 // Function to render the task list and make cards draggable
 function renderTaskList() {
-    // const tasks = readTaskFromStorage();
-    // const taskListContainer = document.getElementById('taskList');
     const todoList = $('#todo-cards');
     todoList.empty();
     const inProgressList = $('#in-progress-cards');
@@ -93,27 +91,14 @@ function handleAddTask(event){
     localStorage.setItem('tasks', JSON.stringify(taskList));
     $('#formModal').modal('hide')
 
-    // const taskColumn = taskList.status === 'to-do' ? $('#todo-cards') :
-    // taskList.status === 'in-progress' ? $('#in-progress-cards') :
-    // taskList.status === 'done' ? $(`#done-cards`) :
-    // taskColumn.append(createTaskCard());
     renderTaskList();
-
-  
-    // createTaskCard(newtask)
-    // renderTaskList(taskList)
-    // handleAddTask()
 }
 
 function readTaskFromStorage(){
-
-    // const storedTasks = localStorage.getItem('tasks');
-    // taskList = storedTasks ? JSON.parse(storedTasks) : [];
-
     if (!taskList ){
         taskList = []
     }
-    return JSON.parse(localStorage.getItem("tasks")) || [];;
+    return JSON.parse(localStorage.getItem("tasks")) || [];
 }
 
 // Function to handle deleting a task
@@ -128,21 +113,16 @@ function handleDeleteTask(event){
 function handleDrop(event, ui) {
     const taskList = readTaskFromStorage();
     const taskCard = ui.draggable[0].getAttribute('data-task-id');
-    // const taskCard = $.draggable['.card'].dataset.taskCard;
     const newStatus = event.target.id;
     console.log(newStatus)
     for (let task of taskList) {
         if (task.id === taskCard) {
             task.status = newStatus;
           }
-          // localStorage.setItem('tasks', JSON.stringify(taskList));
-        //   handleDrop();
-        // return dropElement();
     }
     localStorage.setItem('tasks', JSON.stringify(taskList));
     renderTaskList();
   }
-
     
 // The page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
 $(document).ready(function() {
@@ -150,23 +130,9 @@ $(document).ready(function() {
 
     renderTaskList();
 
-    // $('.draggable').draggable({
-    //     opacity: 0.7,
-    //     zIndex: 100,
-    //     // helper: function (e) {
-    //     //   const original = $(e.target).hasClass('.draggable')
-    //     //     ? $(e.target)
-    //     //     : $(e.target).closest('.ui-draggable');
-    //     //   return original.clone().css({
-    //     //     width: original.outerWidth(),
-    //     //   });
-    //     // },
-    //   });
-
     $('.lane').droppable({
         accept: '.draggable',
         drop: handleDrop,
       });
-     
     });
 
