@@ -2,7 +2,7 @@
 let taskList = JSON.parse(localStorage.getItem("tasks")) || [];
 let nextId = JSON.parse(localStorage.getItem("nextId"));
 
-// Todo: create a function to generate a unique task id
+// Function to generate a unique task id
 function generateTaskId() {
     return `task-${Date.now()}`
 }
@@ -42,7 +42,7 @@ return taskCard;
 
 // Function to render the task list and make cards draggable
 function renderTaskList() {
-    const tasks = readTaskFromStorage();
+    // const tasks = readTaskFromStorage();
     // const taskListContainer = document.getElementById('taskList');
     const todoList = $('#todo-cards');
     todoList.empty();
@@ -50,7 +50,7 @@ function renderTaskList() {
     inProgressList.empty();
     const doneList = $('#done-cards');
     doneList.empty();
-
+    const taskList = readTaskFromStorage();
   for (let task of taskList) {
     if (task.status === 'to-do') {
       todoList.append(createTaskCard(task));
@@ -60,6 +60,18 @@ function renderTaskList() {
       doneList.append(createTaskCard(task));
     }
   }
+  $('.draggable').draggable({
+      opacity: 0.7,
+      zIndex: 100,
+      helper: function (e) {
+        const original = $(e.target).hasClass('.draggable')
+          ? $(e.target)
+          : $(e.target).closest('.ui-draggable');
+        return original.clone().css({
+          width: original.outerWidth(),
+        });
+      },
+    });
 }
 
 // Function to handle adding a new task
@@ -101,7 +113,7 @@ function readTaskFromStorage(){
     if (!taskList ){
         taskList = []
     }
-    return taskList;
+    return JSON.parse(localStorage.getItem("tasks")) || [];;
 }
 
 // Function to handle deleting a task
@@ -115,17 +127,22 @@ function handleDeleteTask(event){
 // Function to handle dropping a task into a new status lane
 function handleDrop(event, ui) {
     const taskList = readTaskFromStorage();
-    // const taskCard = ui.draggable.attr('data-task-id');
-    const taskCard = $.draggable['.card'].dataset.taskCard;
+    const taskCard = ui.draggable[0].getAttribute('data-task-id');
+    // const taskCard = $.draggable['.card'].dataset.taskCard;
     const newStatus = event.target.id;
+    console.log(newStatus)
     for (let task of taskList) {
-        if (task.card === taskCard) {
+        if (task.id === taskCard) {
             task.status = newStatus;
           }
-          localStorage.setItem('task', JSON.stringify(taskList));
+          // localStorage.setItem('tasks', JSON.stringify(taskList));
         //   handleDrop();
         // return dropElement();
-    }}
+    }
+    localStorage.setItem('tasks', JSON.stringify(taskList));
+    renderTaskList();
+  }
+
     
 // The page loads, render the task list, add event listeners, make lanes droppable, and make the due date field a date picker
 $(document).ready(function() {
@@ -133,18 +150,18 @@ $(document).ready(function() {
 
     renderTaskList();
 
-    $('.draggable').draggable({
-        opacity: 0.7,
-        zIndex: 100,
-        helper: function (e) {
-          const original = $(e.target).hasClass('.draggable')
-            ? $(e.target)
-            : $(e.target).closest('.ui-draggable');
-          return original.clone().css({
-            width: original.outerWidth(),
-          });
-        },
-      });
+    // $('.draggable').draggable({
+    //     opacity: 0.7,
+    //     zIndex: 100,
+    //     // helper: function (e) {
+    //     //   const original = $(e.target).hasClass('.draggable')
+    //     //     ? $(e.target)
+    //     //     : $(e.target).closest('.ui-draggable');
+    //     //   return original.clone().css({
+    //     //     width: original.outerWidth(),
+    //     //   });
+    //     // },
+    //   });
 
     $('.lane').droppable({
         accept: '.draggable',
